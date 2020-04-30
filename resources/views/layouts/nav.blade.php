@@ -30,11 +30,11 @@
                         </li>
                     @endguest
 
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Student Management</a>
+                    <li class="nav-item {{ request()->segment(1) == 'student' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('student.index') }}">Student Management</a>
                     </li>
 
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="#">Subject Management</a>
                     </li>
                 </ul>

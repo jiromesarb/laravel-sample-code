@@ -12,6 +12,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('assets/css/default.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
@@ -21,15 +22,11 @@
     <body>
         <div id="app">
             @include('layouts.nav')
-            @yield('datainfo')
             <main class="py-4">
-                {{-- {{ dd(env('API_PAYROLL_BACKEND')) }} --}}
-
                 <div class="container">
                     @yield('content')
                 </div>
             </main>
-
         </div>
     </body>
 </html>

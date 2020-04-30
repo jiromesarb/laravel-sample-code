@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Student;
 use Illuminate\Http\Request;
+
+use Validator;
+
+use App\Student;
 
 class StudentController extends Controller
 {
@@ -14,7 +17,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('pages.students.index');
+        $students = Student::orderBy('id', 'desc')->paginate(10);
+
+        return view('pages.students.index', compact('students'));
     }
 
     /**
@@ -24,7 +29,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.students.create');
     }
 
     /**
@@ -35,7 +40,29 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // return $request->all();
+        $v = Validator::make($request->all(), [
+            'name' => 'required',
+			'contact_number' => 'required',
+		]);
+		if ($v->fails()) return back()->withInput()->withErrors($v->errors());
+
+
+        if (Student::create($request->except(['_token']))) {
+            return back()->withInput()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'plus-circle',
+                'notif.message' => 'Insert successful!',
+            ]);
+        }
+        else {
+            return back()->withInput()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => 'Failed to Insert',
+            ]);
+        }
     }
 
     /**
@@ -46,7 +73,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return view('pages.students.show', compact('student'));
     }
 
     /**
@@ -57,7 +84,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('pages.students.edit', compact('student'));
     }
 
     /**
@@ -69,7 +96,29 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+
+        // return $request->all();
+        $v = Validator::make($request->all(), [
+            'name' => 'required',
+			'contact_number' => 'required',
+		]);
+		if ($v->fails()) return back()->withInput()->withErrors($v->errors());
+
+
+        if ($student->update($request->except(['_token', '_method']))) {
+            return back()->withInput()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'plus-circle',
+                'notif.message' => 'Updated successful!',
+            ]);
+        }
+        else {
+            return back()->withInput()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => 'Failed to update',
+            ]);
+        }
     }
 
     /**
@@ -80,6 +129,19 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        if ($student->delete(0)) {
+            return back()->withInput()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'plus-circle',
+                'notif.message' => 'Deleted successful!',
+            ]);
+        }
+        else {
+            return back()->withInput()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => 'Failed to Delete',
+            ]);
+        }
     }
 }
