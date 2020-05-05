@@ -6,8 +6,7 @@
         <div class="col-md-12">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">Student Management</li>
-                    <li class="breadcrumb-item"><a href="{{ route('student.index') }}">Simple CRUD</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('student.index') }}">Student Management</a></li>
                     <li class="breadcrumb-item">Edit Student - {{ $student['name'] }}</li>
                 </ol>
             </nav>
