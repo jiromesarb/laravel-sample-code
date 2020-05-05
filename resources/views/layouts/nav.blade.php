@@ -34,8 +34,8 @@
                         <a class="nav-link" href="{{ route('student.index') }}">Student Management</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Subject Management</a>
+                    <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('subject.index') }}">Subject Management</a>
                     </li>
                 </ul>
             </div>

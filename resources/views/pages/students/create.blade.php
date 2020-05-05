@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    @section('scripts')
+        <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    @stop
 
     <div class="row">
         <div class="col-md-12">
@@ -60,8 +63,23 @@
                                     <input type="text" name="address" class="form-control" value="{{ old('address') }}">
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Subjects</label>
+                                    <select name="subjects[]" id="" class="form-control select2-multiple-tags-strict" multiple>
+                                        @foreach($subjects as $subject)
+                                            <option value="{{ $subject['id'] }}"
+                                            @if(!empty(old('subjects')))
+                                                @if(in_array($subject['id'], old('subjects')))
+                                                    selected
+                                                @endif
+                                            @endif
+                                            >{{ $subject['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="form-form">
-                                    <button class="text-light btn btn-lg btn-success">Save</button>
+                                    <button class="text-light btn btn-md btn-success">Save</button>
                                 </div>
 
                             </form>
@@ -72,5 +90,4 @@
             </div>
         </div>
     </div>
-
 @stop

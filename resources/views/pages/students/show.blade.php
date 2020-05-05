@@ -53,16 +53,32 @@
                             <div class="form-group">
                                 <label>Email Address</label><br>
                                 <label>
-                                    <strong>{{ $student['email'] }}</strong>
+                                    <strong>{!! !empty($student['email']) ? $student['email'] : '<span class="text-danger">N/A</span>' !!}</strong>
                                 </label>
                             </div>
 
                             <div class="form-group">
                                 <label>Address</label><br>
                                 <label>
-                                    <strong>{{ $student['address'] }}</strong>
+                                    <strong>{!! !empty($student['address']) ? $student['address'] : '<span class="text-danger">N/A</span>' !!}</strong>
                                 </label>
                             </div>
+
+                            <div class="form-group">
+                                <label>Subjects</label><br>
+                                @if(count($student['getSubjects']) != 0)
+                                    <h4>
+                                        @foreach($student['getSubjects'] as $index => $subject)
+                                            <span class="badge badge-info">
+                                                <a target="_blank" href="{{ route('subject.show', $subject['subject']['id']) }}" class=" text-light">{{ $subject['subject']['name'] }}</a>
+                                            </span>
+                                        @endforeach
+                                    </h4>
+                                @else
+                                    <span class="text-danger">N/A</span>
+                                @endif
+                            </div>
+
 
                         </div>
                     </div>

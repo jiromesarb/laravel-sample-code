@@ -11,26 +11,24 @@
             </nav>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <ul class="nav nav-pills" id="myTab">
+                    <ul class="nav nav-pills" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#simple_crud_tab" role="tab" aria-controls="simple_crud_tab"
-                            aria-selected="true">Simple CRUD</a>
+                            <a class="nav-link active" href="#simple_crud_tab" role="tab" data-toggle="tab">Simple CRUD</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#api_crud_tab" role="tab" aria-controls="api_crud_tab"
-                            aria-selected="">API CRUD</a>
+                            <a class="nav-link" href="#api_crud_tab" role="tab" data-toggle="tab">Excel Columns</a>
                         </li>
                     </ul>
                     <div class="tab-content my-5">
-                        <div id="simple_crud_tab" class="tab-pane active">
+                        <div role="tabpanel" class="tab-pane active" id="simple_crud_tab">
                             @include('pages.students.includes.index_simple_crud')
                         </div>
-                        <div id="api_crud_tab" class="tab-pane">
+                        <div role="tabpanel" class="tab-pane" id="api_crud_tab">
                             sad
                         </div>
                     </div>

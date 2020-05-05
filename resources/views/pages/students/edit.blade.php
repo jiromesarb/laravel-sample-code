@@ -21,7 +21,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <h5 class="mb-0 card-title">Create Student</h5>
+                            <h5 class="mb-0 card-title">Update Student - {{ $student['name'] }}</h5>
                             <hr class="my-1" style="border-top: 3px solid #8c8b8b;" width="40px" align="left">
                             <div class="clearfix"></div><br>
                         </div>
@@ -61,9 +61,30 @@
                                     <input type="text" name="address" class="form-control" value="{{ !empty(old('address')) ? old('address') : $student['address'] }}">
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Subjects</label>
+                                    <select name="subjects[]" id="" class="form-control select2-multiple-tags-strict" multiple>
+                                        @foreach($subjects as $subject)
+                                            <option value="{{ $subject['id'] }}"
+                                            @if(!empty(old('subjects')))
+                                                @if(in_array($subject['id'], old('subjects')))
+                                                    selected
+                                                @endif
+                                            @else
+                                                @if(!empty($student->getSubjects))
+                                                    @if(in_array($subject['id'], (array)$student->getSubjects->pluck('subject_id')->toArray()))
+                                                        selected
+                                                    @endif
+                                                @endif
+                                            @endif
+                                            >{{ $subject['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="form-form">
                                     <a href="{{ route('student.show', $student['id']) }}" class="text-light btn btn-lg btn-secondary">Cancel</a>
-                                    <button class="text-light btn btn-lg btn-success">Update</button>
+                                    <button class="text-light btn btn-md btn-success">Update</button>
                                 </div>
 
                             </form>

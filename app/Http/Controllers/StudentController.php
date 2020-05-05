@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Validator;
 
 use App\Student;
+use App\Subject;
+use App\StudentSubjects;
 
 class StudentController extends Controller
 {
@@ -15,11 +17,23 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::orderBy('id', 'desc')->paginate(10);
+        // return $request->all();
 
-        return view('pages.students.index', compact('students'));
+        $students = Student::with('getSubjects')->orderBy('id', 'desc');
+
+        // Filter the students base on the filtered of the user
+        if(!empty($request->keyword) || !empty($request->subjects)){
+
+            $students = $students->filter($request->all());
+        }
+
+        $students = $students->paginate(10);
+
+        $subjects = Subject::orderBy('name', 'asc')->get();
+
+        return view('pages.students.index', compact('students', 'subjects'));
     }
 
     /**
@@ -29,7 +43,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('pages.students.create');
+        $subjects = Subject::orderBy('name', 'asc')->get();
+
+        return view('pages.students.create', compact('subjects'));
     }
 
     /**
@@ -40,17 +56,33 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-
-        // return $request->all();
         $v = Validator::make($request->all(), [
             'name' => 'required',
 			'contact_number' => 'required',
 		]);
 		if ($v->fails()) return back()->withInput()->withErrors($v->errors());
 
+        $student_id = Student::insertGetId($request->except(['_token', 'subjects']));
+        if ($student_id) {
 
-        if (Student::create($request->except(['_token']))) {
-            return back()->withInput()->with([
+            // Check if request subjects is empty
+            if(!empty($request->subjects)){
+
+                // Get request subjects
+                // Reduces the proccess time if you do this. done inserting the data directly to the foreach.
+                $student_subject_data = [];
+                foreach($request->subjects as $subject){
+                    $subject_data[] = [
+                        'student_id' => $student_id,
+                        'subject_id' => $subject,
+                    ];
+                }
+
+                // insert relationship data.
+                StudentSubjects::insert($subject_data);
+            }
+
+            return back()->with([
                 'notif.style' => 'success',
                 'notif.icon' => 'plus-circle',
                 'notif.message' => 'Insert successful!',
@@ -71,8 +103,10 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show($id)
     {
+        $student = Student::with(['getSubjects.subject'])->where('id', $id)->first();
+
         return view('pages.students.show', compact('student'));
     }
 
@@ -82,9 +116,12 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
-        return view('pages.students.edit', compact('student'));
+        $student = Student::with(['getSubjects.subject'])->where('id', $id)->first();
+        $subjects = Subject::orderBy('name', 'asc')->get();
+
+        return view('pages.students.edit', compact('student', 'subjects'));
     }
 
     /**
@@ -105,7 +142,29 @@ class StudentController extends Controller
 		if ($v->fails()) return back()->withInput()->withErrors($v->errors());
 
 
-        if ($student->update($request->except(['_token', '_method']))) {
+        if ($student->update($request->except(['_token', '_method', 'subjects']))) {
+
+            // Check if request subjects is empty
+            if(!empty($request->subjects)){
+                // Delete Previous subjects of student
+                StudentSubjects::whereIn('subject_id', $request->subjects)->delete();
+
+                // Get request subjects
+                // Reduces the proccess time if you do this. done inserting the data directly to the foreach.
+                $student_subject_data = [];
+                foreach($request->subjects as $subject){
+                    $subject_data[] = [
+                        'student_id' => $student['id'],
+                        'subject_id' => $subject,
+                    ];
+                }
+
+                // insert relationship data.
+                StudentSubjects::insert($subject_data);
+            } else {
+                StudentSubjects::where('student_id', $student['id'])->delete();
+            }
+
             return back()->withInput()->with([
                 'notif.style' => 'success',
                 'notif.icon' => 'plus-circle',
