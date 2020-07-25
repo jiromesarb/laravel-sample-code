@@ -14,6 +14,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('/login', [
+    'as' => 'login.login',
+    'uses' => 'Api\Auth\LoginController@login'
+]);
+
+
+Route::group(['middleware' => ['jwt.verify', 'verified']], function (){
+    Route::get('/refresh', [
+        'as' => 'login.refresh',
+        'uses' => 'Api\Auth\LoginController@refresh'
+    ]);
+
+    Route::resource('user', 'Api\UserController');
+
+    Route::get('close', function(){
+        $data = "Only authorized users can see this";
+        return response()->json(compact('data'),200);
+    });
+});
+
+Route::get('/person', function(){
+    $person = [
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+    ];
+
+    // return response()->json(['upload_file_not_found'], 400);
+    return $person;
 });

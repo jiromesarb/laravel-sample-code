@@ -31,11 +31,15 @@
                     @endguest
 
                     <li class="nav-item {{ request()->segment(1) == 'student' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('student.index') }}">Student Management</a>
+                        <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+                    </li>
+
+                    <li class="nav-item {{ request()->segment(1) == 'student' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('student.index') }}">Students</a>
                     </li>
 
                     <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('subject.index') }}">Subject Management</a>
+                        <a class="nav-link" href="{{ route('subject.index') }}">Subjects</a>
                     </li>
                 </ul>
             </div>
