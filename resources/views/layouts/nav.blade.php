@@ -30,7 +30,7 @@
                         </li>
                     @endguest
 
-                    <li class="nav-item {{ request()->segment(1) == 'student' ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->segment(1) == 'user' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('user.index') }}">Users</a>
                     </li>
 
@@ -40,6 +40,18 @@
 
                     <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('subject.index') }}">Subjects</a>
+                    </li>
+
+                    <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
+                        {{-- <a class="nav-link" href="{{ route('subject.index') }}"><span class="fa fa-power-off text-danger"></span></a> --}}
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sample User
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            {{-- <a class="dropdown-item" href="#">My Profile</a> --}}
+                            {{-- <div class="dropdown-divider"></div> --}}
+                            <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                        </div>
                     </li>
                 </ul>
             </div>

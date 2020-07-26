@@ -17,7 +17,20 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', 'StudentController@index');
 Route::resource('student', 'StudentController');
 Route::resource('subject', 'SubjectController');
-// Route::resource('user', 'UserController');
+Route::resource('user', 'UserController');
+
+Route::get('/', 'LoginController@login');
+Route::get('login', 'LoginController@login')->name('login');
+Route::post('post-login', 'LoginController@postLogin')->name('post-login');
+Route::get('logout', 'LoginController@logout')->name('logout');
+
+Route::get('new-password', 'LoginController@newPassword')->name('new-password');
+Route::post('post-new-password', 'LoginController@postNewPassword')->name('post-new-password');
+
+Route::get('login/forgot-password', 'LoginController@forgotPassword')->name('login.forgot-password');
+Route::post('login/post-forgot-password', 'LoginController@postForgotPassword')->name('login.post-forgot-password');
+
+Route::get('reset-password/{token}', 'LoginController@resetPassword')->name('reset-password');
+Route::post('post-reset-password/{token}', 'LoginController@postResetPassword')->name('post-reset-password');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Validator;
 use App\User;
+use Mail;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
 
         // Filter Users
         $show = !empty($request->show) ? $request->show : 10;
-        $users = $users->paginate($show);
+        $users = $users->get();
 
         return apiReturn($users);
     }
@@ -51,10 +52,23 @@ class UserController extends Controller
         if ($v->fails()) return apiReturn($request->all(), 'Validation Failed', 'failed', [$v->errors()]);
 
         // Insert Default Password
-        $request['password'] = bcrypt('Password123');
+        $password = substr(sha1(mt_rand()),17,6);
+        $request['password'] = bcrypt($password);
 
         // Insert data
         if(User::create($request->all())){
+
+			$params = [
+                'name' => $request->name,
+                'email' => $request->email,
+				'password' => $password,
+			];
+            $to = $request->email;
+
+			Mail::send('mail.password-email', $params, function ($m) use($request, $to) {
+				$m->subject('Default Password');
+				$m->to($to);
+			});
 
             return apiReturn($request->all(), 'Successfully Added!');
         } else {
@@ -70,7 +84,13 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('id', $id)->first();
+        if(!empty($user)){
+
+            return apiReturn($user, 'Successfully Updated!');
+        } else {
+            return apiReturn([], 'Invalid User.', 'failed');
+        }
     }
 
     /**
@@ -81,7 +101,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::where('id', $id)->first();
+        if(!empty($user)){
+
+            return apiReturn($user, 'Successfully Updated!');
+        } else {
+            return apiReturn([], 'Invalid User.', 'failed');
+        }
     }
 
     /**

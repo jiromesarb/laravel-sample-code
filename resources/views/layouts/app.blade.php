@@ -16,6 +16,7 @@
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 
         {{-- additional links per page --}}
         @yield('links')
@@ -29,6 +30,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         {{-- <script src="{{ asset('assets/js/bootstrap.min.js') }}" defer></script> --}}
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
         <script src="{{ asset('assets/js/select2.min.js') }}" charset="utf-8"></script>
         <script src="{{ asset('assets/js/custom.js') }}" charset="utf-8"></script>
@@ -44,5 +50,8 @@
                 </div>
             </main>
         </div>
+        <script>
+            $('.datatable').DataTable();
+        </script>
     </body>
 </html>

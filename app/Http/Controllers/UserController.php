@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\User;
+use Mail;
 
 class UserController extends Controller
 {
@@ -22,7 +23,10 @@ class UserController extends Controller
         $show = !empty($request->show) ? $request->show : 10;
         $users = $users->paginate($show);
 
-        return apiReturn($users);
+        $link = env('API_URL') . "api/user";
+        $users = guzzle('GET', $link, $request)['data'];
+        // return apiReturn($users);
+        return view('pages.users.index', compact('users'));
     }
 
     /**
@@ -32,7 +36,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.users.create');
     }
 
     /**
@@ -43,23 +47,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate Request
-        $v = Validator::make($request->all(), [
-            'name' => 'required|min:4|max:255',
-			'email' => 'required|email|unique:users,email',
+        // return $request->all();
+        // Call API
+        $link = env('API_URL') . "api/user";
+        $data = guzzle('POST', $link, $request->all());
 
-		]);
-        if ($v->fails()) return apiReturn($request->all(), 'Validation Failed', 'failed', [$v->errors()]);
-
-        // Insert Default Password
-        $request['password'] = bcrypt('Password123');
-
-        // Insert data
-        if(User::create($request->all())){
-
-            return apiReturn($request->all(), 'Successfully Added!');
+        if($data['status'] == 'success'){
+            // Redirect user
+            return back()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'check',
+                'notif.message' => $data['message'],
+            ]);
         } else {
-            return apiReturn($request->all(), 'Failed to Create.', 'failed');
+
+            $errors = (array)$data['errors'][0];
+            $get_errors = [];
+            if(count($errors) >= 1){
+
+                if(!empty($errors['name'])){
+                    $get_errors[] = $errors['name'][0];
+                }
+                if(!empty($errors['email'])){
+                    $get_errors[] = $errors['email'][0];
+                }
+            } else {
+                $get_errors[] = $errors[0];
+            }
+
+            return back()->withInput()->with([
+                'validation_errors' => $get_errors,
+            ]);
         }
     }
 
@@ -71,7 +89,23 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        // Call API
+        $link = env('API_URL') . "api/user/" . $id;
+        $data = guzzle('GET', $link);
+
+
+        if($data['status'] == 'success'){
+            // Redirect user
+            $user = $data['data'];
+            return view('pages.users.show', compact('user'));
+        } else {
+
+            return back()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => $data['message'],
+            ]);
+        }
     }
 
     /**
@@ -82,7 +116,22 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        // Call API
+        $link = env('API_URL') . "api/user/" . $id . '/edit';
+        $data = guzzle('GET', $link);
+
+        if($data['status'] == 'success'){
+            // Redirect user
+            $user = $data['data'];
+            return view('pages.users.edit', compact('user'));
+        } else {
+
+            return back()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => $data['message'],
+            ]);
+        }
     }
 
     /**
@@ -94,23 +143,38 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate Request
-        $v = Validator::make($request->all(), [
-            'name' => 'required|min:4|max:255',
-			'email' => 'required|email|unique:users,email,' . $id,
+        // return $request->all();
+        // Call API
+        $link = env('API_URL') . "api/user/" . $id;
+        $data = guzzle('POST', $link, $request->all());
+        // return $data;
 
-		]);
-        if ($v->fails()) return apiReturn($request->all(), 'Validation Failed', 'failed', [$v->errors()]);
-
-        // Update data
-        $user = User::where('id', $id)->first();
-        if(!empty($user)){
-
-            $user->update($request->except('_method'));
-
-            return apiReturn($request->all(), 'Successfully Updated!');
+        if($data['status'] == 'success'){
+            // Redirect user
+            return back()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'check',
+                'notif.message' => $data['message'],
+            ]);
         } else {
-            return apiReturn($request->all(), 'Invalid User.', 'failed');
+
+            $errors = (array)$data['errors'][0];
+            $get_errors = [];
+            if(count($errors) >= 1){
+
+                if(!empty($errors['name'])){
+                    $get_errors[] = $errors['name'][0];
+                }
+                if(!empty($errors['email'])){
+                    $get_errors[] = $errors['email'][0];
+                }
+            } else {
+                $get_errors[] = $errors[0];
+            }
+
+            return back()->withInput()->with([
+                'validation_errors' => $get_errors,
+            ]);
         }
     }
 
@@ -122,11 +186,25 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(User::where('id', $id)->delete()){
+        // Call API
+        $link = env('API_URL') . "api/user/" . $id;
+        $data = guzzle('DELETE', $link);
+        // return $data;
 
-            return apiReturn($id, 'Successfully Deleted!');
+        if($data['status'] == 'success'){
+            // Redirect user
+            return back()->with([
+                'notif.style' => 'success',
+                'notif.icon' => 'check',
+                'notif.message' => $data['message'],
+            ]);
         } else {
-            return apiReturn($id, 'Failed to delete.', 'failed');
+
+            return back()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => $data['message'],
+            ]);
         }
     }
 }

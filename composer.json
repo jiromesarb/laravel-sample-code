@@ -10,8 +10,8 @@
     "require": {
         "php": "^7.2.5",
         "fideloper/proxy": "^4.2",
-        "fruitcake/laravel-cors": "^1.0",
-        "guzzlehttp/guzzle": "^6.3",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^6.4",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "tymon/jwt-auth": "^1.0"
@@ -42,7 +42,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Helpers.php"
+            "app/Helpers.php",
+            "app/Validations.php"
         ]
     },
     "autoload-dev": {

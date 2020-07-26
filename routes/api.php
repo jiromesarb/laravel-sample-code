@@ -20,12 +20,16 @@ Route::post('/login', [
     'uses' => 'Api\Auth\LoginController@login'
 ]);
 
+Route::post('/forgot-password', 'Api\Auth\LoginController@forgotPassword');
+Route::post('/reset-password/{token}', 'Api\Auth\LoginController@resetPassword');
 
-Route::group(['middleware' => ['jwt.verify', 'verified']], function (){
-    Route::get('/refresh', [
-        'as' => 'login.refresh',
-        'uses' => 'Api\Auth\LoginController@refresh'
-    ]);
+Route::group(['middleware' => ['jwt.verify']], function (){
+    // Route::get('/refresh', [
+    //     'as' => 'login.refresh',
+    //     'uses' => 'Api\Auth\LoginController@refresh'
+    // ]);
+    Route::post('/new-password', 'Api\Auth\LoginController@newPassword');
+    Route::post('logout', 'Api\Auth\LoginController@logout');
 
     Route::resource('user', 'Api\UserController');
 
