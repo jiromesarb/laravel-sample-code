@@ -17,12 +17,12 @@
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-7">
                             <h5 class="mb-0 card-title">User Management</h5>
                             <hr class="my-1" style="border-top: 3px solid #8c8b8b;" width="40px" align="left">
                             <div class="clearfix"></div><br>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-5">
                             <div class="float-right">
                                 <a href="{{ route('user.create') }}" class="btn btn-success"><span class="fa fa-plus"></span></a>
                             </div>
@@ -30,12 +30,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 table-responsive">
                             @include('includes.notif')
                             <table class="table datatable">
                                 <thead>
                                     <th>User</th>
                                     <th>Email</th>
+                                    <th>Role</th>
                                     <th class="text-center" width="20%">Action</th>
                                 </thead>
                                 <tbody>
@@ -43,6 +44,7 @@
                                     <tr>
                                         <td>{{ $user['name'] }}</td>
                                         <td>{!! $user['email'] !!}</td>
+                                        <td>{!! strtoUpper($user['role']['name']) !!}</td>
                                         <td class="text-center">
                                             <form action="{{ route('user.destroy', $user['id']) }}" method="post">
                                                 {{ csrf_field() }}
@@ -53,7 +55,6 @@
                                         </td>
                                     </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                             <div class="float-right">

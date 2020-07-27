@@ -16,10 +16,13 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
-Route::resource('student', 'StudentController');
-Route::resource('subject', 'SubjectController');
-Route::resource('user', 'UserController');
+Route::group(['middleware' => ['access_control:admin,student']], function (){
+    Route::resource('student', 'StudentController');
+    Route::group(['middleware' => ['access_control:admin']], function (){
+        Route::resource('subject', 'SubjectController');
+        Route::resource('user', 'UserController');
+    });
+});
 
 Route::get('/', 'LoginController@login');
 Route::get('login', 'LoginController@login')->name('login');

@@ -19,12 +19,12 @@
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-7">
                             <h5 class="mb-0 card-title">Show Subject - {{ $subject['name'] }}</h5>
                             <hr class="my-1" style="border-top: 3px solid #8c8b8b;" width="40px" align="left">
                             <div class="clearfix"></div><br>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-5">
                             <div class="float-right">
                                 <a href="{{ route('subject.edit', $subject['id']) }}" class="btn btn-info"><span class="fa fa-pencil"></span></a>
                                 <a href="{{ route('subject.index') }}" class="btn btn-secondary"><span class="fa fa-list"></span></a>

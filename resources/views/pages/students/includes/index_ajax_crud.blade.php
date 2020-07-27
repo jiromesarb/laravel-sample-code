@@ -1,10 +1,10 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 col-7">
         <h5 class="mb-0 card-title">Student Management (AJAX CRUD)</h5>
         <hr class="my-1" style="border-top: 3px solid #8c8b8b;" width="40px" align="left">
         <div class="clearfix"></div><br>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-5">
         <div class="float-right">
             <button type="button" data-toggle="modal" data-target="#ajax-filter-student" class="btn btn-info text-light" ><span class="fa fa-search"></span></button>
             <button type="button" data-toggle="modal" data-target="#add-student" class="btn btn-success"><span class="fa fa-plus"></span></butotn>

@@ -29,6 +29,7 @@ class LoginController extends Controller
 
         $user = auth()->user();
         $user['jwt_token'] = $token;
+        $user['role'] = auth()->user()->role;
 
         return apiReturn($user);
     }

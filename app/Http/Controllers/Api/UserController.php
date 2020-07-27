@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Validator;
-use App\User;
 use Mail;
+use App\User;
+use App\Role;
 
 class UserController extends Controller
 {
@@ -20,7 +21,7 @@ class UserController extends Controller
 
         // Filter Users
         $show = !empty($request->show) ? $request->show : 10;
-        $users = $users->get();
+        $users = $users->with(['role'])->get();
 
         return apiReturn($users);
     }
@@ -47,7 +48,7 @@ class UserController extends Controller
         $v = Validator::make($request->all(), [
             'name' => 'required|min:4|max:255',
 			'email' => 'required|email|unique:users,email',
-
+            'user_role' => 'required',
 		]);
         if ($v->fails()) return apiReturn($request->all(), 'Validation Failed', 'failed', [$v->errors()]);
 
@@ -56,6 +57,7 @@ class UserController extends Controller
         $request['password'] = bcrypt($password);
 
         // Insert data
+        // return $request->all();
         if(User::create($request->all())){
 
 			$params = [
@@ -152,6 +154,17 @@ class UserController extends Controller
             return apiReturn($id, 'Successfully Deleted!');
         } else {
             return apiReturn($id, 'Failed to delete.', 'failed');
+        }
+    }
+
+    public function getRoles(){
+
+        $roles = Role::get();
+        if(!empty($roles)){
+
+            return apiReturn($roles, 'Successfully Updated!');
+        } else {
+            return apiReturn([], 'Invalid User.', 'failed');
         }
     }
 }

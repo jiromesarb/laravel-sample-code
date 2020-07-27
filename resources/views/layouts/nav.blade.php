@@ -30,17 +30,21 @@
                         </li>
                     @endguest
 
-                    <li class="nav-item {{ request()->segment(1) == 'user' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('user.index') }}">Users</a>
-                    </li>
+                    @if(getLoggedUser()['role']['name'] == 'admin')
+                        <li class="nav-item {{ request()->segment(1) == 'user' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('user.index') }}">Users</a>
+                        </li>
+                    @endif
 
                     <li class="nav-item {{ request()->segment(1) == 'student' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('student.index') }}">Students</a>
                     </li>
 
-                    <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('subject.index') }}">Subjects</a>
-                    </li>
+                    @if(getLoggedUser()['role']['name'] == 'admin')
+                        <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('subject.index') }}">Subjects</a>
+                        </li>
+                    @endif
 
                     <li class="nav-item {{ request()->segment(1) == 'subject' ? 'active' : '' }}">
                         {{-- <a class="nav-link" href="{{ route('subject.index') }}"><span class="fa fa-power-off text-danger"></span></a> --}}

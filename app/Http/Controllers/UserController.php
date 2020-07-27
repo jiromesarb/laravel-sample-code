@@ -24,9 +24,24 @@ class UserController extends Controller
         $users = $users->paginate($show);
 
         $link = env('API_URL') . "api/user";
-        $users = guzzle('GET', $link, $request)['data'];
+        $data = guzzle('GET', $link, $request);
+        // return $data;
+
         // return apiReturn($users);
-        return view('pages.users.index', compact('users'));
+
+
+        if($data['status'] == 'success'){
+            // Redirect user
+            $user = $data['data'];
+            return view('pages.users.index', compact('users'));
+        } else {
+
+            return back()->with([
+                'notif.style' => 'danger',
+                'notif.icon' => 'times-circle',
+                'notif.message' => $data['message'],
+            ]);
+        }
     }
 
     /**
@@ -36,7 +51,17 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('pages.users.create');
+
+        // Call API
+        $link = env('API_URL') . "api/get-roles";
+        $data = guzzle('GET', $link);
+        if($data['status'] == 'success'){
+            $roles = $data['data'];
+        } else {
+            $roles = [];
+        }
+
+        return view('pages.users.create', compact('roles'));
     }
 
     /**
@@ -50,7 +75,8 @@ class UserController extends Controller
         // return $request->all();
         // Call API
         $link = env('API_URL') . "api/user";
-        $data = guzzle('POST', $link, $request->all());
+        $data = guzzle('POST', $link, $request->except('_token'));
+        // return $data;
 
         if($data['status'] == 'success'){
             // Redirect user

@@ -32,6 +32,7 @@ Route::group(['middleware' => ['jwt.verify']], function (){
     Route::post('logout', 'Api\Auth\LoginController@logout');
 
     Route::resource('user', 'Api\UserController');
+    Route::get('get-roles', 'Api\UserController@getRoles');
 
     Route::get('close', function(){
         $data = "Only authorized users can see this";

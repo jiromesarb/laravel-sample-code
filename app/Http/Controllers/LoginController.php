@@ -29,6 +29,7 @@ class LoginController extends Controller
         // Call API
         $link = env('API_URL') . "api/login";
         $data = guzzle('POST', $link, $request->all());
+        // return $data;
 
         if($data['status'] == 'success'){
             // Store User Data on session
@@ -39,7 +40,12 @@ class LoginController extends Controller
 
                 return redirect()->route('new-password');
             } else {
-                return redirect()->route('user.index');
+
+                if($data['data']['role']['name'] == 'admin'){
+                    return redirect()->route('user.index');
+                } else {
+                    return redirect()->route('student.index');
+                }
             }
         } else {
 
