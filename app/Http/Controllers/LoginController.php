@@ -100,6 +100,7 @@ class LoginController extends Controller
     }
 
     public function forgotPassword(){
+
         return view('pages.forgot-password');
     }
 
@@ -128,6 +129,12 @@ class LoginController extends Controller
     }
 
     public function resetPassword($token){
+
+        $link = env('API_URL') . "api/forgot-password/check/" . $token;
+        $data = guzzle('GET', $link);
+        if($data['status'] == 'failed'){
+            abort(404);
+        }
 
         return view('pages.reset-password', compact('token'));
     }

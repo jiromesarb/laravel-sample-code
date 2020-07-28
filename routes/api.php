@@ -22,6 +22,7 @@ Route::post('/login', [
 
 Route::post('/forgot-password', 'Api\Auth\LoginController@forgotPassword');
 Route::post('/reset-password/{token}', 'Api\Auth\LoginController@resetPassword');
+Route::get('/forgot-password/check/{token}', 'Api\Auth\LoginController@checkForgotPassword');
 
 Route::group(['middleware' => ['jwt.verify']], function (){
     // Route::get('/refresh', [

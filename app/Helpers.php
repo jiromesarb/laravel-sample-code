@@ -32,6 +32,7 @@ function guzzle($method, $link, $params = []){
             'Authorization' => 'Bearer ' . getLoggedUser()['jwt_token'],
         ];
     }
+    
     // return $headers;
     $data = json_decode($client->request($method, $link, [
         'headers' => $headers,

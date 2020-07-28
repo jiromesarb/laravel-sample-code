@@ -65,6 +65,15 @@ class LoginController extends Controller
         ]);
     }
 
+    public function checkForgotPassword($token){
+
+        $user = User::where('reset_token', $token)->first();
+        if(empty($user)){
+            return apiReturn([$token], 'Invalid Token', 'failed');
+        }
+        return apiReturn($token);
+    }
+
     public function forgotPassword(Request $request){
 
         // Validate Request
